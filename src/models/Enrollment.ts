@@ -94,7 +94,7 @@ const EnrollmentSchema = new Schema<IEnrollment>(
 );
 
 // Pre-save hook to calculate automated average and status
-EnrollmentSchema.pre('save', function () {
+EnrollmentSchema.pre('save', function (this: IEnrollment) {
   const calc = calculateAcademicStatus(this.grades, this.absences, this.totalClasses);
   this.finalAverage = calc.finalAverage;
   this.attendanceRate = calc.attendanceRate;

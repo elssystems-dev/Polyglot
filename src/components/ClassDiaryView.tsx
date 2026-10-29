@@ -50,14 +50,17 @@ export default function ClassDiaryView({ initialClassId }: ClassDiaryViewProps) 
           const list = data.classrooms || [];
           setClassrooms(list);
 
-          if (!selectedClassId && list.length > 0) {
-            // If teacher, pick first teacher's class or first class
-            if (user?.role === 'TEACHER') {
-              const myClass = list.find((c: any) => c.teacherId?._id === user.id);
-              setSelectedClassId(myClass ? myClass._id : list[0]._id);
-            } else {
+          if (user?.role === 'TEACHER') {
+            const myClasses = list.filter((c: any) => (c.teacherId?._id || c.teacherId) === user.id);
+            if (myClasses.length > 0) {
+              if (!selectedClassId || !myClasses.some((c: any) => c._id === selectedClassId)) {
+                setSelectedClassId(myClasses[0]._id);
+              }
+            } else if (list.length > 0 && !selectedClassId) {
               setSelectedClassId(list[0]._id);
             }
+          } else if (!selectedClassId && list.length > 0) {
+            setSelectedClassId(list[0]._id);
           }
         }
       } catch (err) {
@@ -340,13 +343,26 @@ export default function ClassDiaryView({ initialClassId }: ClassDiaryViewProps) 
                 onChange={(e) => setSelectedClassId(e.target.value)}
                 className="h-9 px-3 pr-8 rounded-full bg-[#ffeffc] border border-[#ffdeff] text-xs font-bold text-[#2f0a38] outline-none cursor-pointer"
               >
-                {classrooms.map((c) => (
+                {(user?.role === 'TEACHER'
+                  ? classrooms.filter((c: any) => (c.teacherId?._id || c.teacherId) === user.id)
+                  : classrooms
+                ).map((c) => (
                   <option key={c._id} value={c._id}>
                     {c.code} — {c.name}
                   </option>
                 ))}
               </select>
             </div>
+
+            {selectedClassId && (
+              <Link
+                href={`/pauta?classId=${selectedClassId}`}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white shadow-xs hover:bg-[#ffdeff] transition-all text-[#491ea9] text-xs font-semibold no-underline border border-[#cac3d6]/30"
+              >
+                <span className="material-symbols-outlined text-[15px]">description</span>
+                <span>Pauta Oficial</span>
+              </Link>
+            )}
           </div>
 
           {/* Role Switch Toggle (Modo Professor / Modo Coordenador) */}

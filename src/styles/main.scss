@@ -1,6 +1,17 @@
-@use "variables" as v;
-@use "mixins" as m;
-@use "components" as c;
+// =============================================================================
+// Polyglot Academic Portal - Main SCSS Entrypoint
+// Architecture: 7-1 SCSS Pattern (Variables, Mixins, Base, Layout, Components, Auth, Tables, Pages, Utilities)
+// =============================================================================
+
+@use "variables" as *;
+@use "mixins" as *;
+@use "base";
+@use "layout";
+@use "components";
+@use "auth";
+@use "tables";
+@use "pages";
+@use "utilities";
 
 // Tabular Numbers for Grids and Grades
 .tnum {
@@ -19,9 +30,10 @@
 }
 
 .btn-chromatic {
-  @include m.chromatic-gradient;
+  background: linear-gradient(135deg, #491ea9 0%, #613dc1 50%, #006078 100%);
+  color: #ffffff;
   padding: 10px 20px;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   font-size: 14px;
   font-weight: 600;
   display: inline-flex;
@@ -30,25 +42,13 @@
   gap: 8px;
   cursor: pointer;
   text-decoration: none;
-}
+  box-shadow: 0 4px 14px rgba(73, 30, 169, 0.25);
+  border: none;
+  transition: all 0.2s ease;
 
-// Ambient background glow balls
-.ambient-glow-tertiary {
-  position: absolute;
-  width: 20rem;
-  height: 20rem;
-  border-radius: 9999px;
-  background: radial-gradient(circle, rgba(136, 208, 237, 0.25) 0%, transparent 70%);
-  filter: blur(48px);
-  pointer-events: none;
-}
-
-.ambient-glow-primary {
-  position: absolute;
-  width: 24rem;
-  height: 24rem;
-  border-radius: 9999px;
-  background: radial-gradient(circle, rgba(206, 189, 255, 0.25) 0%, transparent 70%);
-  filter: blur(48px);
-  pointer-events: none;
+  &:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(73, 30, 169, 0.35);
+  }
 }

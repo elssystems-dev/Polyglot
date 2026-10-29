@@ -1,0 +1,408 @@
+// =============================================================================
+// Polyglot Academic Portal - SCSS Authentication & Login Styles
+// =============================================================================
+@use "variables" as v;
+@use "mixins" as m;
+
+.auth-wrapper {
+  min-height: 100vh;
+  background-color: v.$color-surface;
+  color: v.$color-on-surface;
+  @include m.flex-center;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+
+  .glow-1 {
+    position: absolute;
+    top: -6rem;
+    left: -5rem;
+    width: 20rem;
+    height: 20rem;
+    border-radius: v.$radius-full;
+    background: radial-gradient(circle, rgba(136, 208, 237, 0.3) 0%, transparent 70%);
+    filter: blur(48px);
+    pointer-events: none;
+  }
+
+  .glow-2 {
+    position: absolute;
+    bottom: -5rem;
+    right: -5rem;
+    width: 24rem;
+    height: 24rem;
+    border-radius: v.$radius-full;
+    background: radial-gradient(circle, rgba(206, 189, 255, 0.35) 0%, transparent 70%);
+    filter: blur(52px);
+    pointer-events: none;
+  }
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  border-radius: v.$radius-2xl;
+  box-shadow: v.$shadow-xl;
+  border: 1px solid v.$color-border;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+  @include m.transition-default;
+
+  .card-top-strip {
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, v.$color-tertiary-fixed, v.$color-secondary-container, v.$color-primary-container);
+  }
+
+  .auth-card-body {
+    padding: 2rem 2.25rem;
+    @include m.flex-column;
+    gap: 1.5rem;
+
+    @include m.mobile-only {
+      padding: 1.5rem 1.25rem;
+      gap: 1.25rem;
+    }
+  }
+
+  // Header with Logo
+  .auth-brand-row {
+    @include m.flex-between;
+    align-items: center;
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .brand-logo-box {
+        width: 44px;
+        height: 44px;
+        border-radius: v.$radius-lg;
+        background: v.$color-surface-container;
+        @include m.flex-center;
+        padding: 4px;
+        border: 1px solid v.$color-surface-container-high;
+        box-shadow: v.$shadow-xs;
+      }
+
+      .brand-text {
+        @include m.flex-column;
+
+        .brand-title {
+          font-family: v.$font-headline;
+          font-size: 16px;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          color: v.$color-primary;
+
+          span {
+            color: v.$color-secondary;
+            font-weight: 400;
+          }
+        }
+
+        .brand-subtitle {
+          font-family: v.$font-mono;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: v.$color-on-surface-variant;
+          margin-top: 1px;
+        }
+      }
+    }
+
+    .badge-secure {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: v.$radius-full;
+      background: v.$color-surface-container-low;
+      color: v.$color-tertiary;
+      border: 1px solid v.$color-surface-container-high;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  .auth-title-group {
+    @include m.flex-column;
+    gap: 4px;
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: v.$color-on-surface;
+    }
+
+    p {
+      font-size: 13px;
+      color: v.$color-on-surface-variant;
+    }
+  }
+
+  // Role Switcher Tabs
+  .role-toggle-bar {
+    background: v.$color-surface-container-low;
+    padding: 4px;
+    border-radius: v.$radius-xl;
+    border: 1px solid v.$color-surface-container-high;
+    display: flex;
+    gap: 4px;
+
+    .role-btn {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: v.$radius-lg;
+      font-size: 12px;
+      font-weight: 600;
+      color: v.$color-on-surface-variant;
+      @include m.flex-center;
+      gap: 8px;
+      transition: all 0.2s ease;
+
+      &.active {
+        background: #ffffff;
+        color: v.$color-primary;
+        font-weight: 700;
+        box-shadow: v.$shadow-xs;
+        border: 1px solid v.$color-border;
+      }
+
+      &:hover:not(.active) {
+        color: v.$color-on-surface;
+      }
+    }
+  }
+
+  // Error Message
+  .auth-error-box {
+    padding: 10px 14px;
+    border-radius: v.$radius-lg;
+    background: v.$color-error-container;
+    color: v.$color-on-error-container;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(186, 26, 26, 0.2);
+  }
+
+  // Form Fields
+  .auth-form {
+    @include m.flex-column;
+    gap: 16px;
+
+    .form-field {
+      @include m.flex-column;
+      gap: 6px;
+
+      label {
+        font-size: 12px;
+        font-weight: 600;
+        color: v.$color-on-surface;
+        @include m.flex-between;
+
+        .domain-tag {
+          font-family: v.$font-mono;
+          font-size: 11px;
+          color: v.$color-secondary;
+          font-weight: 500;
+        }
+
+        .forgot-link {
+          font-size: 11px;
+          color: v.$color-primary;
+          font-weight: 500;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        .input-icon {
+          position: absolute;
+          left: 12px;
+          color: rgba(73, 69, 83, 0.7);
+          pointer-events: none;
+          font-size: 20px;
+        }
+
+        input {
+          width: 100%;
+          height: 44px;
+          padding-left: 40px;
+          padding-right: 14px;
+          border-radius: v.$radius-xl;
+          background: rgba(255, 239, 252, 0.6);
+          border: 1px solid v.$color-surface-container-high;
+          color: v.$color-on-surface;
+          font-size: 13px;
+          outline: none;
+          transition: all 0.2s ease;
+
+          &::placeholder {
+            color: rgba(73, 69, 83, 0.5);
+          }
+
+          &:focus {
+            background: #ffffff;
+            border-color: v.$color-primary-container;
+            box-shadow: 0 0 0 3px rgba(97, 61, 193, 0.15);
+          }
+        }
+
+        .toggle-password-btn {
+          position: absolute;
+          right: 10px;
+          color: rgba(73, 69, 83, 0.7);
+          padding: 6px;
+          @include m.flex-center;
+
+          &:hover {
+            color: v.$color-on-surface;
+          }
+        }
+      }
+    }
+
+    .form-checkbox-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: v.$color-on-surface-variant;
+        cursor: pointer;
+
+        input[type="checkbox"] {
+          width: 16px;
+          height: 16px;
+          accent-color: v.$color-primary-container;
+          cursor: pointer;
+        }
+      }
+    }
+
+    // Submit Button
+    .btn-submit-auth {
+      @include m.chromatic-gradient;
+      width: 100%;
+      height: 48px;
+      border-radius: v.$radius-xl;
+      font-size: 14px;
+      font-weight: 700;
+      @include m.flex-center;
+      gap: 8px;
+      margin-top: 6px;
+      position: relative;
+      overflow: hidden;
+
+      &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  // Quick Demo Logins
+  .quick-demo-box {
+    background: rgba(255, 239, 252, 0.6);
+    border: 1px solid v.$color-surface-container-high;
+    border-radius: v.$radius-xl;
+    padding: 14px;
+    @include m.flex-column;
+    gap: 10px;
+
+    .quick-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: v.$color-secondary;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quick-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      .quick-chip {
+        padding: 5px 10px;
+        border-radius: v.$radius-md;
+        background: #ffffff;
+        border: 1px solid v.$color-surface-container-high;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: v.$shadow-xs;
+        transition: all 0.15s ease;
+
+        .dot {
+          width: 6px;
+          height: 6px;
+          border-radius: v.$radius-full;
+        }
+
+        &.chip-admin {
+          color: v.$color-coordinator-text;
+          .dot { background: v.$color-coordinator-text; }
+          &:hover {
+            border-color: v.$color-coordinator-text;
+            background: v.$color-coordinator-bg;
+          }
+        }
+
+        &.chip-teacher-1 {
+          color: v.$color-teacher-text;
+          .dot { background: v.$color-teacher-text; }
+          &:hover {
+            border-color: v.$color-teacher-text;
+            background: v.$color-teacher-bg;
+          }
+        }
+
+        &.chip-teacher-2 {
+          color: v.$color-secondary;
+          .dot { background: v.$color-secondary; }
+          &:hover {
+            border-color: v.$color-secondary;
+            background: v.$color-secondary-fixed;
+          }
+        }
+      }
+    }
+  }
+
+  .auth-card-footer {
+    padding: 12px 24px;
+    background: rgba(255, 231, 254, 0.4);
+    border-top: 1px solid v.$color-border;
+    @include m.flex-between;
+    font-family: v.$font-mono;
+    font-size: 11px;
+    color: v.$color-on-surface-variant;
+  }
+}

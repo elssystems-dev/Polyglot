@@ -21,7 +21,8 @@ export default function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
     { label: 'Cursos', href: '/cursos', icon: 'auto_stories' },
     { label: 'Professores', href: '/professores', icon: 'school' },
     { label: 'Alunos', href: '/alunos', icon: 'person_search' },
-    { label: 'Diário & Pauta', href: '/diario', icon: 'edit_calendar' },
+    { label: 'Pauta das Turmas', href: '/pauta', icon: 'grade' },
+    { label: 'Diário de Classe', href: '/diario', icon: 'edit_calendar' },
   ];
 
   return (

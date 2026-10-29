@@ -1,0 +1,362 @@
+// =============================================================================
+// Polyglot Academic Portal - SCSS Layout (AppShell, Sidebar, Header)
+// =============================================================================
+@use "variables" as v;
+@use "mixins" as m;
+
+.app-layout-root {
+  min-height: 100vh;
+  background-color: v.$color-surface;
+  color: v.$color-on-surface;
+  display: flex;
+}
+
+// AppShell Main Content Wrapper
+.app-main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: padding-left 0.3s ease;
+
+  @include m.lg {
+    padding-left: v.$sidebar-width;
+  }
+}
+
+.app-page-container {
+  flex: 1;
+  margin-top: v.$header-height;
+  padding: 1.5rem 1.5rem 4rem 1.5rem;
+  max-width: 1400px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+
+  @include m.sm {
+    padding: 2rem 2rem 4rem 2rem;
+  }
+}
+
+// Sidebar Styles
+.app-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: v.$sidebar-width;
+  background: #ffffff;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: v.$shadow-sm;
+  border-right: 1px solid v.$color-border;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @include m.mobile-only {
+    transform: translateX(-100%);
+    &.mobile-open {
+      transform: translateX(0);
+    }
+  }
+
+  .sidebar-header {
+    height: v.$header-height;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(202, 195, 214, 0.25);
+    background: #ffffff;
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .brand-logo-wrapper {
+        width: 40px;
+        height: 40px;
+        border-radius: v.$radius-lg;
+        background: v.$color-surface-container;
+        @include m.flex-center;
+        padding: 4px;
+        box-shadow: v.$shadow-xs;
+      }
+
+      .brand-title {
+        font-family: v.$font-headline;
+        font-size: 18px;
+        font-weight: 700;
+        color: v.$color-on-surface;
+        line-height: 1;
+      }
+
+      .brand-subtitle {
+        font-size: 10px;
+        font-weight: 600;
+        color: v.$color-secondary;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-top: 3px;
+      }
+    }
+  }
+
+  .sidebar-nav-section-title {
+    padding: 1rem 1.5rem 0.5rem 1.5rem;
+    color: v.$color-on-surface-variant;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .sidebar-nav-list {
+    padding: 0 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .nav-item-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: v.$radius-lg;
+      font-size: 13px;
+      font-weight: 500;
+      color: v.$color-on-surface-variant;
+      transition: all 0.2s ease;
+
+      .nav-icon {
+        font-size: 20px;
+      }
+
+      &:hover {
+        background: rgba(255, 222, 255, 0.4);
+        color: v.$color-on-surface;
+      }
+
+      &.active {
+        background: v.$color-primary-container;
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: v.$shadow-purple-glow;
+
+        .nav-icon {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  .sidebar-footer-box {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .system-status-card {
+      padding: 12px 14px;
+      border-radius: v.$radius-xl;
+      background: v.$color-surface-container-low;
+      border: 1px solid v.$color-surface-container-high;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .status-badge-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: v.$color-secondary;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+
+        .pulsing-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 9999px;
+          background: v.$color-secondary;
+          animation: pulse 2s infinite;
+        }
+      }
+
+      .status-info-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .semester-title {
+          font-weight: 600;
+          font-size: 13px;
+          color: v.$color-on-surface;
+        }
+
+        .semester-status-tag {
+          font-family: v.$font-mono;
+          font-size: 10px;
+          font-weight: 700;
+          padding: 2px 8px;
+          border-radius: v.$radius-full;
+          background: v.$color-surface-container-highest;
+          color: v.$color-on-surface;
+        }
+      }
+    }
+
+    .btn-logout {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: v.$radius-md;
+      font-size: 12px;
+      font-weight: 600;
+      color: v.$color-error;
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: v.$color-error-container;
+      }
+    }
+  }
+}
+
+// Mobile Backdrop
+.mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 40;
+}
+
+// Header Navbar Styles
+.app-header-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: v.$header-height;
+  background: rgba(255, 247, 250, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid v.$color-border;
+  z-index: 30;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include m.lg {
+    left: v.$sidebar-width;
+    padding: 0 2rem;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .header-institution-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: v.$radius-full;
+      background: v.$color-surface-container-high;
+      border: 1px solid v.$color-surface-container-highest;
+      font-size: 12px;
+      font-weight: 600;
+      color: v.$color-on-surface;
+
+      .pill-icon {
+        color: v.$color-secondary;
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .role-badge {
+      padding: 4px 12px;
+      border-radius: v.$radius-full;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      &.coordinator {
+        background: v.$color-coordinator-bg;
+        color: v.$color-coordinator-text;
+        border: 1px solid v.$color-coordinator-border;
+      }
+
+      &.teacher {
+        background: v.$color-teacher-bg;
+        color: v.$color-teacher-text;
+        border: 1px solid v.$color-teacher-border;
+      }
+    }
+
+    .user-profile-widget {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .user-meta-text {
+        display: none;
+        flex-direction: column;
+        text-align: right;
+
+        @include m.sm {
+          display: flex;
+        }
+
+        .user-name {
+          font-size: 12px;
+          font-weight: 700;
+          color: v.$color-on-surface;
+          line-height: 1.2;
+        }
+
+        .user-role-label {
+          font-size: 11px;
+          color: v.$color-on-surface-variant;
+        }
+      }
+
+      .user-avatar-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: v.$radius-full;
+        background: v.$color-primary-container;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 14px;
+        @include m.flex-center;
+        overflow: hidden;
+        box-shadow: v.$shadow-xs;
+        border: 2px solid #ffffff;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+}

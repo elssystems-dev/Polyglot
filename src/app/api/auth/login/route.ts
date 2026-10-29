@@ -12,6 +12,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'E-mail e senha são obrigatórios' }, { status: 400 });
     }
 
+    // Auto-seed if database is fresh
+    const userCount = await User.countDocuments();
+    if (userCount === 0) {
+      const { seedDatabase } = await import('@/lib/seed');
+      await seedDatabase(true);
+    }
+
     const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
       return NextResponse.json({ error: 'Credenciais inválidas. Verifique seu e-mail e senha.' }, { status: 401 });

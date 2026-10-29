@@ -1,0 +1,283 @@
+// =============================================================================
+// Polyglot Academic Portal - SCSS Page Specific Styles
+// =============================================================================
+@use "variables" as v;
+@use "mixins" as m;
+
+// 1. Landing Page (Home)
+.landing-root {
+  min-height: 100vh;
+  background-color: v.$color-surface;
+  color: v.$color-on-surface;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+
+  .landing-header {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.25rem 1.5rem;
+    @include m.flex-between;
+    position: relative;
+    z-index: 10;
+  }
+
+  .landing-hero {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: v.$radius-full;
+      background: v.$color-surface-container-high;
+      border: 1px solid v.$color-surface-container-highest;
+      color: v.$color-primary;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+
+      .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 9999px;
+        background: v.$color-primary-container;
+        animation: pulse 2s infinite;
+      }
+    }
+
+    .hero-title {
+      font-family: v.$font-headline;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: v.$color-on-surface;
+      line-height: 1.15;
+      max-width: 900px;
+
+      @include m.sm {
+        font-size: 3.25rem;
+      }
+
+      .text-gradient {
+        background: linear-gradient(90deg, v.$color-primary-container, v.$color-secondary, v.$color-tertiary-container);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+
+    .hero-description {
+      margin-top: 1.25rem;
+      font-size: 1rem;
+      color: v.$color-on-surface-variant;
+      max-width: 650px;
+      line-height: 1.6;
+
+      @include m.sm {
+        font-size: 1.125rem;
+      }
+    }
+
+    .hero-ctas {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+  }
+
+  .landing-feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+    margin-top: 4rem;
+    text-align: left;
+
+    @include m.sm {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include m.lg {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .feature-card {
+      background: #ffffff;
+      border-radius: v.$radius-2xl;
+      padding: 1.5rem;
+      border: 1px solid v.$color-border;
+      box-shadow: v.$shadow-xs;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+
+      &:hover {
+        box-shadow: v.$shadow-md;
+        transform: translateY(-2px);
+      }
+
+      .card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: v.$radius-xl;
+        @include m.flex-center;
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: v.$color-on-surface;
+      }
+
+      p {
+        font-size: 12px;
+        color: v.$color-on-surface-variant;
+        margin-top: 6px;
+        line-height: 1.5;
+      }
+
+      .card-tag {
+        margin-top: 1rem;
+        font-size: 11px;
+        font-weight: 700;
+      }
+    }
+  }
+
+  .landing-footer {
+    width: 100%;
+    border-top: 1px solid v.$color-border;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    padding: 1.5rem;
+    position: relative;
+    z-index: 10;
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      @include m.flex-between;
+      font-size: 12px;
+      color: v.$color-on-surface-variant;
+      flex-direction: column;
+      gap: 10px;
+
+      @include m.sm {
+        flex-direction: row;
+      }
+    }
+  }
+}
+
+// 2. Pauta Sheet Styles
+.pauta-sheet-header {
+  @include m.top-chromatic-strip(4px);
+  background: #ffffff;
+  border-radius: v.$radius-2xl;
+  padding: 1.5rem;
+  border: 1px solid v.$color-border;
+  box-shadow: v.$shadow-xs;
+}
+
+.pauta-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 1rem;
+
+  @include m.sm {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include m.lg {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .kpi-mini-box {
+    padding: 12px;
+    border-radius: v.$radius-xl;
+    background: v.$color-surface;
+    border: 1px solid v.$color-border;
+    text-align: center;
+
+    .label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: v.$color-on-surface-variant;
+      display: block;
+    }
+
+    .value {
+      font-family: v.$font-headline;
+      font-size: 20px;
+      font-weight: 700;
+      color: v.$color-on-surface;
+      margin-top: 4px;
+    }
+  }
+}
+
+// 3. Print Styles for Pauta
+@media print {
+  .app-sidebar,
+  .app-header-navbar,
+  .print\\:hidden,
+  button,
+  .btn,
+  .table-filter-bar {
+    display: none !important;
+  }
+
+  .app-main-wrapper {
+    padding-left: 0 !important;
+  }
+
+  .app-page-container {
+    margin-top: 0 !important;
+    padding: 0 !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt;
+  }
+
+  .polyglot-table {
+    border: 1px solid #000000 !important;
+    font-size: 10pt !important;
+
+    th, td {
+      border: 1px solid #000000 !important;
+      padding: 6px 8px !important;
+      color: #000000 !important;
+    }
+
+    thead tr {
+      background: #f0f0f0 !important;
+    }
+  }
+
+  .hidden.print\\:block {
+    display: block !important;
+  }
+}

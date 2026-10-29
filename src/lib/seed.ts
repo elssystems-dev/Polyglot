@@ -398,3 +398,16 @@ export async function seedDatabase(forceReset: boolean = false) {
     },
   };
 }
+
+if (typeof require !== 'undefined' && require.main === module) {
+  seedDatabase(true)
+    .then((res) => {
+      console.log('Seed concluído com sucesso!');
+      console.log(JSON.stringify(res, null, 2));
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.error('Falha ao executar seed:', err);
+      process.exit(1);
+    });
+}

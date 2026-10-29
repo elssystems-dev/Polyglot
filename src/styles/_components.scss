@@ -1,89 +1,288 @@
+// =============================================================================
+// Polyglot Academic Portal - SCSS Component Library
+// =============================================================================
 @use "variables" as v;
 @use "mixins" as m;
 
-// Segmented Role Switcher
-.role-segmented-control {
-  background: v.$color-surface-container-low;
-  padding: 4px;
+// 1. Buttons
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
   border-radius: v.$radius-lg;
-  display: flex;
-  gap: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  @include m.transition-default;
 
-  .role-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: v.$radius-md;
-    font-size: 13px;
-    font-weight: 600;
-    color: v.$color-on-surface-variant;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
 
-    &.active {
-      background: v.$color-surface-container-lowest;
-      color: v.$color-primary;
-      box-shadow: 0 1px 4px rgba(47, 10, 56, 0.08);
-    }
+.btn-primary {
+  @extend .btn;
+  background: v.$color-primary-container;
+  color: #ffffff;
+  box-shadow: v.$shadow-xs;
 
-    &:hover:not(.active) {
+  &:hover {
+    filter: brightness(1.08);
+    box-shadow: v.$shadow-md;
+  }
+}
+
+.btn-chromatic {
+  @extend .btn;
+  @include m.chromatic-gradient;
+  padding: 10px 20px;
+  border-radius: v.$radius-xl;
+  font-weight: 700;
+}
+
+.btn-secondary {
+  @extend .btn;
+  background: #ffffff;
+  color: v.$color-primary;
+  border-color: v.$color-border;
+  box-shadow: v.$shadow-xs;
+
+  &:hover {
+    background: v.$color-surface-container-low;
+    border-color: v.$color-primary-fixed-dim;
+  }
+}
+
+.btn-danger {
+  @extend .btn;
+  background: v.$color-error-container;
+  color: v.$color-on-error-container;
+  border-color: rgba(186, 26, 26, 0.2);
+
+  &:hover {
+    background: #ffcdd2;
+  }
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: v.$radius-lg;
+  @include m.flex-center;
+  color: v.$color-on-surface-variant;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: v.$color-surface-container-high;
+    color: v.$color-on-surface;
+  }
+
+  &.danger:hover {
+    background: v.$color-error-container;
+    color: v.$color-error;
+  }
+}
+
+// 2. Form Inputs, Selects & Textareas
+.form-input,
+.polyglot-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border-radius: v.$radius-xl;
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
+  color: v.$color-on-surface;
+  font-size: 13px;
+  outline: none;
+  @include m.transition-default;
+
+  &:focus {
+    background: #ffffff;
+    border-color: v.$color-primary-container;
+    box-shadow: 0 0 0 3px rgba(97, 61, 193, 0.15);
+  }
+}
+
+.form-select,
+.polyglot-select {
+  @extend .polyglot-input;
+  cursor: pointer;
+  appearance: auto;
+}
+
+.form-textarea,
+.polyglot-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: v.$radius-xl;
+  background: v.$color-surface;
+  border: 1px solid v.$color-border;
+  color: v.$color-on-surface;
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+  @include m.transition-default;
+
+  &:focus {
+    background: #ffffff;
+    border-color: v.$color-primary-container;
+    box-shadow: 0 0 0 3px rgba(97, 61, 193, 0.15);
+  }
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: v.$color-on-surface;
+  margin-bottom: 6px;
+
+  .req {
+    color: v.$color-error;
+  }
+}
+
+// 3. Modals
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 60;
+  @include m.flex-center;
+  padding: 1rem;
+}
+
+.modal-dialog {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: v.$radius-2xl;
+  box-shadow: v.$shadow-xl;
+  border: 1px solid v.$color-border;
+  overflow: hidden;
+  position: relative;
+  animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .modal-header {
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid rgba(202, 195, 214, 0.25);
+    @include m.flex-between;
+
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
       color: v.$color-on-surface;
     }
   }
+
+  .modal-body {
+    padding: 1.5rem 1.75rem;
+    @include m.flex-column;
+    gap: 14px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .modal-footer {
+    padding: 1rem 1.75rem;
+    border-top: 1px solid rgba(202, 195, 214, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
 }
 
-// KPI Metric Cards
-.polyglot-kpi-card {
-  @include m.top-chromatic-strip;
-  background: v.$color-surface-container-lowest;
-  border-radius: v.$radius-xl;
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+// 4. Cards
+.polyglot-card {
+  background: #ffffff;
+  border-radius: v.$radius-2xl;
   padding: 1.5rem;
   box-shadow: v.$shadow-sm;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid v.$color-border;
+  position: relative;
+  overflow: hidden;
+  @include m.transition-default;
 
   &:hover {
     box-shadow: v.$shadow-md;
-    transform: translateY(-2px);
-  }
-
-  .kpi-title {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: v.$color-on-surface-variant;
-  }
-
-  .kpi-value {
-    font-family: v.$font-headline;
-    font-size: 28px;
-    font-weight: 700;
-    color: v.$color-on-surface;
-    margin-top: 4px;
-  }
-
-  .kpi-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: v.$radius-lg;
-    background: v.$color-surface-container-high;
-    @include m.flex-center;
-    color: v.$color-primary;
   }
 }
 
-// Interactive Day Chips (SEG, TER, QUA...)
+// 5. Badges
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: v.$radius-full;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-cefr {
+  @extend .badge;
+  background: v.$color-success-bg;
+  color: v.$color-success;
+  border: 1px solid v.$color-success-border;
+}
+
+.badge-code {
+  @extend .badge;
+  font-family: v.$font-mono;
+  background: v.$color-surface-container-high;
+  color: v.$color-primary;
+  border: 1px solid v.$color-surface-container-highest;
+}
+
+// Academic Status Badges
+.status-aprovado {
+  @extend .badge;
+  background: v.$color-success-bg !important;
+  color: v.$color-success !important;
+  border: 1px solid v.$color-success-border;
+}
+
+.status-recuperacao {
+  @extend .badge;
+  background: v.$color-warning-bg !important;
+  color: v.$color-warning !important;
+  border: 1px solid v.$color-warning-border;
+}
+
+.status-reprovado {
+  @extend .badge;
+  background: v.$color-error-container !important;
+  color: v.$color-on-error-container !important;
+  border: 1px solid v.$color-error-border;
+}
+
+.status-cursando {
+  @extend .badge;
+  background: v.$color-secondary-fixed !important;
+  color: v.$color-on-secondary-container !important;
+  border: 1px solid v.$color-secondary-fixed-dim;
+}
+
+// 6. Day Chips (SEG, TER, QUA...)
 .day-chip-btn {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: v.$radius-full;
   @include m.flex-center;
   font-family: v.$font-mono;
@@ -93,7 +292,7 @@
   background: v.$color-surface;
   color: v.$color-on-surface-variant;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  @include m.transition-default;
 
   &:hover {
     background: v.$color-surface-container-high;
@@ -102,102 +301,34 @@
 
   &.active {
     background: v.$color-primary-container;
-    color: v.$color-on-primary;
+    color: #ffffff;
     border-color: v.$color-primary-container;
     box-shadow: 0 3px 10px rgba(97, 61, 193, 0.3);
     font-weight: 700;
   }
 }
 
-// Stitch Table
-.polyglot-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-
-  thead tr {
-    background: v.$color-surface-container-low;
-    th {
-      padding: 12px 18px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: v.$color-on-surface-variant;
-      border-bottom: 1px solid v.$color-outline-variant;
-    }
-  }
-
-  tbody tr {
-    transition: background-color 0.15s ease;
-    td {
-      padding: 14px 18px;
-      border-bottom: 1px solid rgba(202, 195, 214, 0.4);
-      color: v.$color-on-surface;
-    }
-
-    &:hover {
-      background-color: rgba(255, 239, 252, 0.4);
-    }
-  }
-}
-
-// Badges
-.badge-role-coordinator {
-  background: v.$color-coordinator-bg;
-  color: v.$color-coordinator-text;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: v.$radius-full;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.badge-role-teacher {
-  background: v.$color-teacher-bg;
-  color: v.$color-teacher-text;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: v.$radius-full;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-// Automatic Average Status Badges
-.status-aprovado {
-  background: v.$color-success-bg;
-  color: v.$color-success;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: v.$radius-full;
-  font-size: 11px;
-  display: inline-flex;
+// 7. Toast Alerts
+.polyglot-toast {
+  position: fixed;
+  top: 5rem;
+  right: 1.5rem;
+  z-index: 70;
+  background: v.$color-tertiary-container;
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: v.$radius-xl;
+  box-shadow: v.$shadow-lg;
+  border: 1px solid v.$color-tertiary-fixed-dim;
+  display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  animation: slideInDown 0.3s ease;
 }
 
-.status-recuperacao {
-  background: v.$color-warning-bg;
-  color: v.$color-warning;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: v.$radius-full;
-  font-size: 11px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.status-reprovado {
-  background: v.$color-error-container;
-  color: v.$color-on-error-container;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: v.$radius-full;
-  font-size: 11px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+@keyframes slideInDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
 }

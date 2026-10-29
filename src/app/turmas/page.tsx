@@ -10,6 +10,7 @@ export default function TurmasPage() {
   const [classrooms, setClassrooms] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Course Form State
   const [courseForm, setCourseForm] = useState({
@@ -22,7 +23,7 @@ export default function TurmasPage() {
     description: '',
   });
 
-  // Classroom Form State
+  // Classroom Form State (Creation)
   const [classForm, setClassForm] = useState({
     code: 'ENG-2025-04',
     name: '',
@@ -36,6 +37,21 @@ export default function TurmasPage() {
     room: 'Sala 101 - Multimídia',
     startDate: '2025-03-03',
     endDate: '2025-06-30',
+  });
+
+  // Edit Modal State
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingClass, setEditingClass] = useState<any>(null);
+  const [editClassForm, setEditClassForm] = useState({
+    name: '',
+    courseId: '',
+    teacherId: '',
+    capacity: 18,
+    scheduleDays: ['SEG', 'QUA'],
+    startTime: '19:00',
+    endTime: '20:30',
+    room: 'Sala 101',
+    status: 'IN_PROGRESS',
   });
 
   const availableDays = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
@@ -82,14 +98,25 @@ export default function TurmasPage() {
     loadData();
   }, []);
 
-  const handleToggleDay = (day: string) => {
-    const current = classForm.scheduleDays;
-    if (current.includes(day)) {
-      if (current.length > 1) {
-        setClassForm({ ...classForm, scheduleDays: current.filter((d) => d !== day) });
+  const handleToggleDay = (day: string, isEditing: boolean = false) => {
+    if (isEditing) {
+      const current = editClassForm.scheduleDays;
+      if (current.includes(day)) {
+        if (current.length > 1) {
+          setEditClassForm({ ...editClassForm, scheduleDays: current.filter((d) => d !== day) });
+        }
+      } else {
+        setEditClassForm({ ...editClassForm, scheduleDays: [...current, day] });
       }
     } else {
-      setClassForm({ ...classForm, scheduleDays: [...current, day] });
+      const current = classForm.scheduleDays;
+      if (current.includes(day)) {
+        if (current.length > 1) {
+          setClassForm({ ...classForm, scheduleDays: current.filter((d) => d !== day) });
+        }
+      } else {
+        setClassForm({ ...classForm, scheduleDays: [...current, day] });
+      }
     }
   };
 
@@ -158,6 +185,45 @@ export default function TurmasPage() {
     }
   };
 
+  const handleOpenEditClass = (c: any) => {
+    setEditingClass(c);
+    setEditClassForm({
+      name: c.name,
+      courseId: c.courseId?._id || c.courseId,
+      teacherId: c.teacherId?._id || c.teacherId,
+      capacity: c.capacity || 18,
+      scheduleDays: c.scheduleDays || ['SEG', 'QUA'],
+      startTime: c.startTime || '19:00',
+      endTime: c.endTime || '20:30',
+      room: c.room || 'Sala 01',
+      status: c.status || 'IN_PROGRESS',
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEditClass = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingClass) return;
+
+    try {
+      const res = await fetch(`/api/classes/${editingClass._id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editClassForm),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'Erro ao editar turma');
+        return;
+      }
+      showToast('Turma atualizada com sucesso!');
+      setIsEditModalOpen(false);
+      loadData();
+    } catch (err: any) {
+      alert(err.message || 'Erro ao conectar');
+    }
+  };
+
   const handleDeleteClass = async (id: string) => {
     if (!confirm('Deseja realmente remover esta turma e todos os seus vínculos?')) return;
     try {
@@ -173,6 +239,16 @@ export default function TurmasPage() {
       alert(err.message);
     }
   };
+
+  const filteredClassrooms = classrooms.filter((c) => {
+    const q = searchTerm.toLowerCase();
+    return (
+      c.code.toLowerCase().includes(q) ||
+      c.name.toLowerCase().includes(q) ||
+      (c.courseId?.name || '').toLowerCase().includes(q) ||
+      (c.teacherId?.name || '').toLowerCase().includes(q)
+    );
+  });
 
   return (
     <AppShell allowedRoles={['COORDINATOR']}>
@@ -197,10 +273,10 @@ export default function TurmasPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="font-['Space_Grotesk'] text-2xl sm:text-3xl font-bold text-[#2f0a38] tracking-tight">
-                Gestão de Matriz Curricular & Oferta
+                Gestão de Cursos & Turmas (Oferta Letiva)
               </h1>
               <p className="text-sm text-[#494553] max-w-3xl mt-1">
-                Configure as bases estruturais dos programas linguísticos e estabeleça o planejamento operacional das turmas com sincronização direta no diário de classe.
+                CRUD completo de Matriz Curricular (Cursos) e Turmas letivas associando cursos e professores com controle de vagas e pauta centralizada.
               </p>
             </div>
 
@@ -274,7 +350,7 @@ export default function TurmasPage() {
                   <input
                     type="text"
                     required
-                    placeholder="Ex: Inglês Avançado B2"
+                    placeholder="Ex: Francês Aplicado a Negócios"
                     value={courseForm.name}
                     onChange={(e) => setCourseForm({ ...courseForm, name: e.target.value })}
                     className="w-full h-10 px-3 rounded-xl bg-[#fff7fa] border border-[#cac3d6]/50 text-xs text-[#2f0a38] outline-none focus:border-[#613dc1]"
@@ -470,7 +546,7 @@ export default function TurmasPage() {
                       <button
                         key={day}
                         type="button"
-                        onClick={() => handleToggleDay(day)}
+                        onClick={() => handleToggleDay(day, false)}
                         className={`w-10 h-10 rounded-full flex items-center justify-center font-['JetBrains_Mono'] text-xs transition-all shadow-xs cursor-pointer ${
                           isSelected
                             ? 'bg-[#613dc1] text-white font-bold shadow-[0_3px_10px_rgba(97,61,193,0.3)]'
@@ -532,18 +608,33 @@ export default function TurmasPage() {
 
         {/* List of Registered Turmas with Quick Actions */}
         <section className="flex flex-col space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="font-['Space_Grotesk'] text-xl font-bold text-[#2f0a38]">
-              Turmas Cadastradas ({classrooms.length})
-            </h2>
-            <span className="text-xs text-[#5156ab] font-bold">Semestre 2025.1</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="font-['Space_Grotesk'] text-xl font-bold text-[#2f0a38]">
+                Turmas Cadastradas ({filteredClassrooms.length})
+              </h2>
+              <span className="text-xs text-[#5156ab] font-bold">Semestre Letivo 2025.1</span>
+            </div>
+
+            <div className="relative w-full sm:w-72">
+              <span className="material-symbols-outlined absolute left-3 top-2.5 text-[#494553]/70 text-[18px]">
+                search
+              </span>
+              <input
+                type="text"
+                placeholder="Filtrar por código, curso, prof..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full h-9 pl-9 pr-3 rounded-xl bg-white border border-[#cac3d6]/40 text-xs outline-none focus:border-[#613dc1]"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {classrooms.map((c) => (
+            {filteredClassrooms.map((c) => (
               <div
                 key={c._id}
-                className="rounded-2xl bg-white p-6 shadow-sm border border-[#cac3d6]/30 flex flex-col justify-between"
+                className="rounded-2xl bg-white p-6 shadow-sm border border-[#cac3d6]/30 flex flex-col justify-between hover:shadow-md transition-all"
               >
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between">
@@ -580,14 +671,24 @@ export default function TurmasPage() {
 
                 <div className="mt-4 pt-3 border-t border-[#cac3d6]/20 flex items-center justify-between gap-2">
                   <Link
-                    href={`/diario/${c._id}`}
-                    className="flex-1 py-2 rounded-xl bg-[#613dc1] text-white text-xs font-bold text-center no-underline hover:brightness-105 shadow-xs"
+                    href={`/pauta?classId=${c._id}`}
+                    className="flex-1 py-2 rounded-xl bg-[#613dc1] text-white text-xs font-bold text-center no-underline hover:brightness-105 shadow-xs flex items-center justify-center gap-1"
                   >
-                    Ver Pauta
+                    <span className="material-symbols-outlined text-[15px]">description</span>
+                    <span>Ver Pauta</span>
                   </Link>
+
+                  <button
+                    onClick={() => handleOpenEditClass(c)}
+                    className="p-2 rounded-xl bg-[#fff7fa] hover:bg-[#ffdeff] text-[#491ea9] border border-[#cac3d6]/40 text-xs transition-colors cursor-pointer"
+                    title="Editar Turma"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">edit</span>
+                  </button>
+
                   <button
                     onClick={() => handleDeleteClass(c._id)}
-                    className="p-2 rounded-xl text-[#ba1a1a] hover:bg-[#ffdad6]/40 text-xs transition-colors"
+                    className="p-2 rounded-xl text-[#ba1a1a] hover:bg-[#ffdad6]/40 text-xs transition-colors cursor-pointer"
                     title="Excluir Turma"
                   >
                     <span className="material-symbols-outlined text-[18px]">delete</span>
@@ -597,6 +698,168 @@ export default function TurmasPage() {
             ))}
           </div>
         </section>
+
+        {/* Modal: Editar Turma */}
+        {isEditModalOpen && editingClass && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-[#cac3d6]/40 p-6 sm:p-8 overflow-hidden relative">
+              <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#cac3d6]/20">
+                <h2 className="font-['Space_Grotesk'] text-lg font-bold text-[#2f0a38]">
+                  Editar Turma ({editingClass.code})
+                </h2>
+                <button
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="p-1 rounded-lg text-[#494553] hover:text-[#2f0a38] cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[20px]">close</span>
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveEditClass} className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#2f0a38]">Nome da Turma</label>
+                  <input
+                    type="text"
+                    required
+                    value={editClassForm.name}
+                    onChange={(e) => setEditClassForm({ ...editClassForm, name: e.target.value })}
+                    className="w-full h-10 px-3 rounded-xl bg-[#fff7fa] border border-[#cac3d6]/50 text-xs outline-none focus:border-[#613dc1]"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-[#2f0a38]">Curso</label>
+                    <select
+                      value={editClassForm.courseId}
+                      onChange={(e) => setEditClassForm({ ...editClassForm, courseId: e.target.value })}
+                      className="w-full h-10 px-3 rounded-xl bg-[#fff7fa] border border-[#cac3d6]/50 text-xs outline-none focus:border-[#613dc1]"
+                    >
+                      {courses.map((course) => (
+                        <option key={course._id} value={course._id}>
+                          {course.name} ({course.language})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-[#2f0a38]">Professor Responsável</label>
+                    <select
+                      value={editClassForm.teacherId}
+                      onChange={(e) => setEditClassForm({ ...editClassForm, teacherId: e.target.value })}
+                      className="w-full h-10 px-3 rounded-xl bg-[#fff7fa] border border-[#cac3d6]/50 text-xs outline-none focus:border-[#613dc1]"
+                    >
+                      {teachers.map((t) => (
+                        <option key={t._id} value={t._id}>
+                          {t.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-[#2f0a38]">Capacidade</label>
+                    <input
+                      type="number"
+                      min={5}
+                      max={50}
+                      value={editClassForm.capacity}
+                      onChange={(e) => setEditClassForm({ ...editClassForm, capacity: Number(e.target.value) })}
+                      className="w-full h-10 px-3 rounded-xl bg-[#fff7fa] border border-[#cac3d6]/50 text-xs outline-none focus:border-[#613dc1]"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-[#2f0a38]">Horário Início</label>
+                    <input
+                      type="time"
+                      value={editClassForm.startTime}
+                      onChange={(e) => setEditClassForm({ ...editClassForm, startTime: e.target.value })}
+                      className="w-full h-10 px-3 rounded-xl bg-[#fff7fa] border border-[#cac3d6]/50 text-xs outline-none focus:border-[#613dc1]"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-[#2f0a38]">Horário Término</label>
+                    <input
+                      type="time"
+                      value={editClassForm.endTime}
+                      onChange={(e) => setEditClassForm({ ...editClassForm, endTime: e.target.value })}
+                      className="w-full h-10 px-3 rounded-xl bg-[#fff7fa] border border-[#cac3d6]/50 text-xs outline-none focus:border-[#613dc1]"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-[#2f0a38]">Sala / Ambiente</label>
+                    <input
+                      type="text"
+                      value={editClassForm.room}
+                      onChange={(e) => setEditClassForm({ ...editClassForm, room: e.target.value })}
+                      className="w-full h-10 px-3 rounded-xl bg-[#fff7fa] border border-[#cac3d6]/50 text-xs outline-none focus:border-[#613dc1]"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-semibold text-[#2f0a38]">Status</label>
+                    <select
+                      value={editClassForm.status}
+                      onChange={(e) => setEditClassForm({ ...editClassForm, status: e.target.value })}
+                      className="w-full h-10 px-3 rounded-xl bg-[#fff7fa] border border-[#cac3d6]/50 text-xs outline-none focus:border-[#613dc1]"
+                    >
+                      <option value="OPEN">Aberta para Matrículas</option>
+                      <option value="IN_PROGRESS">Em Andamento</option>
+                      <option value="COMPLETED">Encerrada</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-[#2f0a38]">Dias Semanais</label>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {availableDays.map((day) => {
+                      const isSelected = editClassForm.scheduleDays.includes(day);
+                      return (
+                        <button
+                          key={day}
+                          type="button"
+                          onClick={() => handleToggleDay(day, true)}
+                          className={`w-9 h-9 rounded-full flex items-center justify-center font-['JetBrains_Mono'] text-xs transition-all shadow-xs cursor-pointer ${
+                            isSelected
+                              ? 'bg-[#613dc1] text-white font-bold'
+                              : 'bg-[#fff7fa] text-[#494553] border border-[#cac3d6]/50 hover:bg-[#ffdeff]'
+                          }`}
+                        >
+                          {day}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#cac3d6]/20">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditModalOpen(false)}
+                    className="px-4 py-2 rounded-xl text-xs font-semibold text-[#494553] hover:bg-[#fff7fa] cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 rounded-xl bg-[#613dc1] text-white text-xs font-bold shadow-sm hover:brightness-105 cursor-pointer"
+                  >
+                    Salvar Alterações
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </AppShell>
   );

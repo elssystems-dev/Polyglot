@@ -1,3 +1,6 @@
+// =============================================================================
+// Polyglot Academic Portal - SCSS Mixins
+// =============================================================================
 @use "variables" as v;
 
 // Flexbox Helpers
@@ -18,17 +21,49 @@
   flex-direction: column;
 }
 
+// Media Query Mixins
+@mixin sm {
+  @media (min-width: v.$bp-sm) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (min-width: v.$bp-md) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (min-width: v.$bp-lg) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (min-width: v.$bp-xl) {
+    @content;
+  }
+}
+
+@mixin mobile-only {
+  @media (max-width: #{v.$bp-md - 1px}) {
+    @content;
+  }
+}
+
 // Stitch Chromatic Button Gradient
 @mixin chromatic-gradient {
-  background: linear-gradient(90deg, v.$color-tertiary-fixed-dim, v.$color-secondary-container, v.$color-primary-container);
-  color: v.$color-on-primary;
+  background: linear-gradient(90deg, v.$color-tertiary-fixed-dim 0%, v.$color-secondary-container 50%, v.$color-primary-container 100%);
+  color: #ffffff;
   border: none;
   box-shadow: v.$shadow-purple-glow;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
   &:hover {
-    filter: brightness(1.06);
+    filter: brightness(1.08);
     box-shadow: 0 6px 20px rgba(97, 61, 193, 0.38);
+    transform: translateY(-1px);
   }
 
   &:active {
@@ -38,15 +73,15 @@
 
 // Glassmorphism Card
 @mixin glass-panel {
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(202, 195, 214, 0.3);
+  border: 1px solid v.$color-border;
   box-shadow: v.$shadow-sm;
 }
 
-// Chromatic Top Indicator Strip
-@mixin top-chromatic-strip {
+// Chromatic Top Indicator Strip on Cards
+@mixin top-chromatic-strip($height: 4px) {
   position: relative;
   overflow: hidden;
 
@@ -56,27 +91,13 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, v.$color-tertiary-fixed, v.$color-secondary-container, v.$color-primary-container);
+    height: $height;
+    background: linear-gradient(90deg, v.$color-tertiary-fixed-dim, v.$color-secondary-container, v.$color-primary-container);
     z-index: 2;
   }
 }
 
-// Responsive Breakpoints
-@mixin mobile {
-  @media (max-width: 767px) {
-    @content;
-  }
-}
-
-@mixin tablet {
-  @media (min-width: 768px) and (max-width: 1023px) {
-    @content;
-  }
-}
-
-@mixin desktop {
-  @media (min-width: 1024px) {
-    @content;
-  }
+// Smooth transitions
+@mixin transition-default {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
