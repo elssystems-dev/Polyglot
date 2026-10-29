@@ -1,0 +1,54 @@
+@use "variables" as v;
+@use "mixins" as m;
+@use "components" as c;
+
+// Tabular Numbers for Grids and Grades
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+// Chromatic Gradient Utilities
+.bg-chromatic-gradient {
+  background: linear-gradient(90deg, #88d0ed, #9ea3fe, #613dc1);
+}
+
+.text-chromatic-gradient {
+  background: linear-gradient(90deg, #006078, #491ea9, #613dc1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-chromatic {
+  @include m.chromatic-gradient;
+  padding: 10px 20px;
+  border-radius: 0.5rem;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+// Ambient background glow balls
+.ambient-glow-tertiary {
+  position: absolute;
+  width: 20rem;
+  height: 20rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(136, 208, 237, 0.25) 0%, transparent 70%);
+  filter: blur(48px);
+  pointer-events: none;
+}
+
+.ambient-glow-primary {
+  position: absolute;
+  width: 24rem;
+  height: 24rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(206, 189, 255, 0.25) 0%, transparent 70%);
+  filter: blur(48px);
+  pointer-events: none;
+}

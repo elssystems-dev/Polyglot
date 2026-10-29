@@ -1,0 +1,203 @@
+@use "variables" as v;
+@use "mixins" as m;
+
+// Segmented Role Switcher
+.role-segmented-control {
+  background: v.$color-surface-container-low;
+  padding: 4px;
+  border-radius: v.$radius-lg;
+  display: flex;
+  gap: 4px;
+
+  .role-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: v.$radius-md;
+    font-size: 13px;
+    font-weight: 600;
+    color: v.$color-on-surface-variant;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.active {
+      background: v.$color-surface-container-lowest;
+      color: v.$color-primary;
+      box-shadow: 0 1px 4px rgba(47, 10, 56, 0.08);
+    }
+
+    &:hover:not(.active) {
+      color: v.$color-on-surface;
+    }
+  }
+}
+
+// KPI Metric Cards
+.polyglot-kpi-card {
+  @include m.top-chromatic-strip;
+  background: v.$color-surface-container-lowest;
+  border-radius: v.$radius-xl;
+  padding: 1.5rem;
+  box-shadow: v.$shadow-sm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: v.$shadow-md;
+    transform: translateY(-2px);
+  }
+
+  .kpi-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: v.$color-on-surface-variant;
+  }
+
+  .kpi-value {
+    font-family: v.$font-headline;
+    font-size: 28px;
+    font-weight: 700;
+    color: v.$color-on-surface;
+    margin-top: 4px;
+  }
+
+  .kpi-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: v.$radius-lg;
+    background: v.$color-surface-container-high;
+    @include m.flex-center;
+    color: v.$color-primary;
+  }
+}
+
+// Interactive Day Chips (SEG, TER, QUA...)
+.day-chip-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: v.$radius-full;
+  @include m.flex-center;
+  font-family: v.$font-mono;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid v.$color-outline-variant;
+  background: v.$color-surface;
+  color: v.$color-on-surface-variant;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    background: v.$color-surface-container-high;
+    color: v.$color-on-surface;
+  }
+
+  &.active {
+    background: v.$color-primary-container;
+    color: v.$color-on-primary;
+    border-color: v.$color-primary-container;
+    box-shadow: 0 3px 10px rgba(97, 61, 193, 0.3);
+    font-weight: 700;
+  }
+}
+
+// Stitch Table
+.polyglot-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  thead tr {
+    background: v.$color-surface-container-low;
+    th {
+      padding: 12px 18px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: v.$color-on-surface-variant;
+      border-bottom: 1px solid v.$color-outline-variant;
+    }
+  }
+
+  tbody tr {
+    transition: background-color 0.15s ease;
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(202, 195, 214, 0.4);
+      color: v.$color-on-surface;
+    }
+
+    &:hover {
+      background-color: rgba(255, 239, 252, 0.4);
+    }
+  }
+}
+
+// Badges
+.badge-role-coordinator {
+  background: v.$color-coordinator-bg;
+  color: v.$color-coordinator-text;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: v.$radius-full;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.badge-role-teacher {
+  background: v.$color-teacher-bg;
+  color: v.$color-teacher-text;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: v.$radius-full;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+// Automatic Average Status Badges
+.status-aprovado {
+  background: v.$color-success-bg;
+  color: v.$color-success;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: v.$radius-full;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-recuperacao {
+  background: v.$color-warning-bg;
+  color: v.$color-warning;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: v.$radius-full;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-reprovado {
+  background: v.$color-error-container;
+  color: v.$color-on-error-container;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: v.$radius-full;
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
